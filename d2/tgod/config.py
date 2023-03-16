@@ -1,0 +1,44 @@
+# -*- coding: utf-8 -*-
+# ------------------------------------------------------------------------
+# TGOD
+# ------------------------------------------------------------------------
+# Modified from DETR (https://github.com/facebookresearch/detr)
+# Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+# ------------------------------------------------------------------------
+from detectron2.config import CfgNode as CN
+
+
+def add_tgod_config(cfg):
+    """
+    Add config for DETR.
+    """
+    cfg.MODEL.DETR = CN()
+    cfg.MODEL.DETR.NUM_CLASSES = 80
+
+    # LOSS
+    cfg.MODEL.DETR.GIOU_WEIGHT = 2.0
+    cfg.MODEL.DETR.L1_WEIGHT = 5.0
+    cfg.MODEL.DETR.CLASS_WEIGHT = 1.0
+    cfg.MODEL.DETR.CONTASTIVE_WEIGHT = 1.0
+    cfg.MODEL.DETR.DEEP_SUPERVISION = True
+    cfg.MODEL.DETR.NO_OBJECT_WEIGHT = 0.1
+
+    # TRANSFORMER
+    cfg.MODEL.DETR.NHEADS = 8
+    cfg.MODEL.DETR.DROPOUT = 0.1
+    cfg.MODEL.DETR.DIM_FEEDFORWARD = 2048
+    cfg.MODEL.DETR.ENC_LAYERS = 6
+    cfg.MODEL.DETR.DEC_LAYERS = 6
+    cfg.MODEL.DETR.PRE_NORM = False
+    # Deformable DETR
+    cfg.MODEL.DETR.FEATLEVEL = 4
+    cfg.MODEL.DETR.NUM_CHANNELS = [512, 1024, 2048]
+
+    cfg.MODEL.DETR.HIDDEN_DIM = 256
+    cfg.MODEL.DETR.NUM_OBJECT_QUERIES = 100
+    cfg.MODEL.DETR.MAX_WORD_LEN = 100
+    cfg.MODEL.DETR.CONTRASTIVE_LOSS = False
+    cfg.MODEL.DETR.CONTRASTIVE_HDIM = 64
+
+    cfg.SOLVER.OPTIMIZER = "ADAMW"
+    cfg.SOLVER.BACKBONE_MULTIPLIER = 0.1

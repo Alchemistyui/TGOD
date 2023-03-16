@@ -1,0 +1,68 @@
+# ------------------------------------------------------------------------
+# TGOD: training config
+# ------------------------------------------------------------------------
+# Modified from DETR (https://github.com/facebookresearch/detr)
+# Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+# ------------------------------------------------------------------------
+OUTPUT_DIR: OUTPUT_DIR/
+MODEL:
+  META_ARCHITECTURE: "TGOD"
+  WEIGHTS: '../weight/deformable_detr_coco.pth'
+  # COCO
+  PIXEL_MEAN: [123.675, 116.280, 103.530]
+  PIXEL_STD: [58.395, 57.120, 57.375]
+  # # TVQAplus
+  # PIXEL_MEAN: [45.3139, 48.5505, 64.9858]
+  # PIXEL_STD: [42.1221, 42.3933, 49.8102]
+  MASK_ON: False
+  RESNETS:
+    DEPTH: 50
+    STRIDE_IN_1X1: False
+    OUT_FEATURES: ["res3", "res4", "res5"]
+  DETR:
+    GIOU_WEIGHT: 2.0
+    L1_WEIGHT: 5.0
+    CLASS_WEIGHT: 2.0
+    CONTASTIVE_WEIGHT: 1.0
+    NUM_OBJECT_QUERIES: 300
+    MAX_WORD_LEN: 19
+    NUM_CLASSES: 19    # same as max word len
+    DIM_FEEDFORWARD: 1024
+    CONTRASTIVE_LOSS: True
+    CONTRASTIVE_HDIM: 300
+DATASETS:
+  TRAIN: ("tvqa_train_pos_tag",)
+  TEST: ("tvqa_val_pos_tag",)
+SOLVER:
+  IMS_PER_BATCH: 16
+  BASE_LR: 2e-4
+  # 108086 img for tvqa_train, 6755 iters per epoch with 16 bs, about 30,40 epoch
+  STEPS: (202650, 270200) 
+  # about 50 epoch
+  MAX_ITER: 337750
+  WARMUP_FACTOR: 1.0
+  WARMUP_ITERS: 10
+  WEIGHT_DECAY: 0.0001
+  OPTIMIZER: "ADAMW"
+  BACKBONE_MULTIPLIER: 0.1
+  CHECKPOINT_PERIOD: 6800
+  CLIP_GRADIENTS:
+    ENABLED: True
+    CLIP_TYPE: "full_model"
+    CLIP_VALUE: 0.01 # 0.1?
+    NORM_TYPE: 2.0
+INPUT:
+  MIN_SIZE_TRAIN: (480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800)
+  CROP:
+    ENABLED: True
+    TYPE: "absolute_range"
+    SIZE: (384, 600)
+  FORMAT: "RGB"
+TEST:
+  EVAL_PERIOD: 6755
+DATALOADER:
+  FILTER_EMPTY_ANNOTATIONS: True
+  NUM_WORKERS: 2
+VERSION: 2
+
+
